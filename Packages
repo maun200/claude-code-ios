@@ -1,0 +1,25 @@
+Package: com.anthropic.claude-code
+Version: 2.1.19-1
+Architecture: iphoneos-arm64
+Maintainer: Bryan
+Installed-Size: 142528
+Depends: firmware (>= 15.0), zsh, ldid
+Conflicts: com.anthropic.claude-code-beta
+Provides: claude-code
+Filename: debs/claude-code_2.1.19-1_iphoneos-arm64.deb
+Size: 28699968
+MD5sum: 235408ecacd95fa7c26d47d2b3336dae
+SHA1: df73c80e283381f59ba253b1ba06c5afcbd5db84
+SHA256: 798457c0553e5686fb4d06f030208d8dbbe47247f61daaa457a82947b677e4be
+Section: Development
+Homepage: https://claude.ai
+Description: Claude Code CLI for iOS - AI-powered coding assistant
+ Run Claude Code natively on your jailbroken iPhone.
+ Includes Node.js 18.20.4 runtime with iOS-optimized V8 flags.
+ Supports API key and OAuth authentication.
+Tag: purpose::console, role::developer
+Author: Bryan
+Depiction: depictions/com.anthropic.claude-code.html
+Name: Claude Code
+SileoDepiction: depictions/com.anthropic.claude-code.json
+

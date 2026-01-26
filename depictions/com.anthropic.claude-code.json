@@ -1,0 +1,76 @@
+{
+  "minVersion": "0.1",
+  "headerImage": "",
+  "tintColor": "#F28C38",
+  "tabs": [
+    {
+      "tabname": "Details",
+      "views": [
+        {
+          "class": "DepictionMarkdownView",
+          "markdown": "# Claude Code for iOS\n\nRun Claude Code natively on your jailbroken iPhone. This package includes:\n\n- **Node.js 18.20.4** runtime optimized for iOS\n- **Claude Code 2.1.19** - Anthropic's AI coding assistant\n- **Home screen app** for quick access\n\n## Features\n\n- Full Claude Code CLI functionality\n- API key and OAuth authentication support\n- Optimized V8 flags for iOS JIT restrictions\n- Works with NewTerm for terminal access\n\n## Requirements\n\n- iOS 15.0 or later\n- Jailbroken device (Dopamine, palera1n, etc.)\n- ~150MB free storage\n- zsh shell\n- ldid signing tool"
+        },
+        {
+          "class": "DepictionSeparatorView"
+        },
+        {
+          "class": "DepictionHeaderView",
+          "title": "Usage"
+        },
+        {
+          "class": "DepictionMarkdownView",
+          "markdown": "### Authentication\n```\nclaude-auth\n```\n\n### Run Claude Code\n```\nclaude\n```\n\n### Single Query Mode\n```\nclaude -p \"your prompt here\"\n```"
+        },
+        {
+          "class": "DepictionSeparatorView"
+        },
+        {
+          "class": "DepictionHeaderView",
+          "title": "Information"
+        },
+        {
+          "class": "DepictionTableTextView",
+          "title": "Developer",
+          "text": "Bryan"
+        },
+        {
+          "class": "DepictionTableTextView",
+          "title": "Original Author",
+          "text": "Anthropic"
+        },
+        {
+          "class": "DepictionTableTextView",
+          "title": "Version",
+          "text": "2.1.19-1"
+        },
+        {
+          "class": "DepictionTableTextView",
+          "title": "Compatibility",
+          "text": "iOS 15.0+"
+        },
+        {
+          "class": "DepictionTableButtonView",
+          "title": "Source Code",
+          "action": "https://github.com/anthropics/claude-code",
+          "openExternal": true
+        }
+      ],
+      "class": "DepictionStackView"
+    },
+    {
+      "tabname": "Changelog",
+      "views": [
+        {
+          "class": "DepictionHeaderView",
+          "title": "2.1.19-1"
+        },
+        {
+          "class": "DepictionMarkdownView",
+          "markdown": "- Initial iOS release\n- Node.js 18.20.4 with iOS optimizations\n- Home screen app launcher\n- OAuth and API key authentication\n- Rootless jailbreak support (/var/jb)"
+        }
+      ],
+      "class": "DepictionStackView"
+    }
+  ],
+  "class": "DepictionTabView"
+}
