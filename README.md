@@ -9,7 +9,7 @@ Sileo/Cydia/Zebra repository for Claude Code on jailbroken iOS devices.
 Add this URL to your package manager:
 
 ```
-https://YOUR_GITHUB_USERNAME.github.io/claude-code-ios/
+https://imcynic.github.io/claude-code-ios/
 ```
 
 ## Manual Installation

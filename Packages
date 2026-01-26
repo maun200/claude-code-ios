@@ -19,7 +19,7 @@ Description: Claude Code CLI for iOS - AI-powered coding assistant
  Supports API key and OAuth authentication.
 Tag: purpose::console, role::developer
 Author: Bryan
-Depiction: depictions/com.anthropic.claude-code.html
+Depiction: https://imcynic.github.io/claude-code-ios/depictions/com.anthropic.claude-code.html
 Name: Claude Code
-SileoDepiction: depictions/com.anthropic.claude-code.json
+SileoDepiction: https://imcynic.github.io/claude-code-ios/depictions/com.anthropic.claude-code.json
 
