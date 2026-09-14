@@ -1,0 +1,25 @@
+Package: com.anthropic.claude-code
+Name: Claude Code
+Version: 2.1.19-2
+Architecture: iphoneos-arm64
+Description: Claude Code CLI for iOS - AI-powered coding assistant
+ Run Claude Code natively on your jailbroken iPhone. CLI-only package -
+ the experimental home-screen app launcher has been removed since it was
+ just a broken NewTerm URL-scheme shim with no functionality of its own.
+ Includes Node.js 18.20.4 runtime with iOS-optimized V8 flags and uses the
+ system ripgrep package for code search instead of a bundled macOS binary.
+ Login and authentication are handled entirely by the official Claude Code
+ CLI itself (`claude` -> /login, or `claude setup-token` for headless SSH
+ sessions) - this package no longer ships its own OAuth callback server or
+ credential gate.
+Maintainer: Bryan
+Author: Anthropic (iOS package by Bryan)
+Section: Development
+Depends: firmware (>= 15.0), zsh, ldid, ripgrep
+Conflicts: com.anthropic.claude-code-beta
+Provides: claude-code
+Tag: purpose::console, role::developer
+Homepage: https://github.com/anthropics/claude-code
+Depiction: https://github.com/anthropics/claude-code
+SileoDepiction: https://github.com/anthropics/claude-code
+Installed-Size: 0

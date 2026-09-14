@@ -8,7 +8,7 @@
       "views": [
         {
           "class": "DepictionMarkdownView",
-          "markdown": "# Claude Code for iOS\n\nRun Claude Code natively on your jailbroken iPhone. This package includes:\n\n- **Node.js 18.20.4** runtime optimized for iOS\n- **Claude Code 2.1.19** - Anthropic's AI coding assistant\n- **Home screen app** for quick access\n\n## Features\n\n- Full Claude Code CLI functionality\n- API key and OAuth authentication support\n- Optimized V8 flags for iOS JIT restrictions\n- Works with NewTerm for terminal access\n\n## Requirements\n\n- iOS 15.0 or later\n- Jailbroken device (Dopamine, palera1n, etc.)\n- ~150MB free storage\n- zsh shell\n- ldid signing tool"
+          "markdown": "# Claude Code for iOS\n\nRun Claude Code natively on your jailbroken iPhone. CLI-only package. This package includes:\n\n- **Node.js 18.20.4** runtime optimized for iOS\n- **Claude Code 2.1.19** - Anthropic's AI coding assistant\n- **System ripgrep** for code search (no bundled macOS binary)\n\n## Features\n\n- Full Claude Code CLI functionality\n- Login/authentication handled entirely by the official CLI - no bundled OAuth server or credential gate\n- Optimized V8 flags for iOS JIT restrictions\n- Fixed initial-launch terminal hang on iOS terminal apps\n- Run from any terminal (SSH, NewTerm, etc.) - the experimental home-screen app has been removed\n\n## Requirements\n\n- iOS 15.0 or later\n- Jailbroken device (Dopamine, palera1n, etc.)\n- ~140MB free storage\n- zsh, ldid, ripgrep"
         },
         {
           "class": "DepictionSeparatorView"
@@ -19,7 +19,7 @@
         },
         {
           "class": "DepictionMarkdownView",
-          "markdown": "### Authentication\n```\nclaude-auth\n```\n\n### Run Claude Code\n```\nclaude\n```\n\n### Single Query Mode\n```\nclaude -p \"your prompt here\"\n```"
+          "markdown": "### Run Claude Code\n```\nclaude\n```\nFirst run prompts you to log in via `/login`, or run `claude setup-token` for a headless SSH-only login.\n\n### Single Query Mode\n```\nclaude -p \"your prompt here\"\n```"
         },
         {
           "class": "DepictionSeparatorView"
@@ -41,7 +41,7 @@
         {
           "class": "DepictionTableTextView",
           "title": "Version",
-          "text": "2.1.19-1"
+          "text": "2.1.19-2"
         },
         {
           "class": "DepictionTableTextView",
@@ -60,6 +60,14 @@
     {
       "tabname": "Changelog",
       "views": [
+        {
+          "class": "DepictionHeaderView",
+          "title": "2.1.19-2"
+        },
+        {
+          "class": "DepictionMarkdownView",
+          "markdown": "- Removed the home-screen app (it was just a broken NewTerm URL-scheme launcher)\n- Removed the bundled OAuth/localhost-callback auth flow and the credential gate - login is now entirely the official CLI's job (`/login`, or `claude setup-token` for headless SSH)\n- Fixed a terminal hang on first launch on several iOS terminal apps (CLAUDE_CODE_ACCESSIBILITY=1)\n- Switched to the system `ripgrep` package instead of the bundled macOS ripgrep binary; added it as a package dependency\n- Rebuilt as a traceable overlay/repack on top of the pinned 2.1.19-1 upstream .deb (see scripts/build-repack.sh in the repo)"
+        },
         {
           "class": "DepictionHeaderView",
           "title": "2.1.19-1"

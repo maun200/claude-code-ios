@@ -1,0 +1,52 @@
+#!/var/jb/usr/bin/zsh
+
+# Post-installation script for Claude Code iOS (CLI-only community repack)
+
+echo "Setting up Claude Code..."
+
+# Create per-user config directories for both mobile (normal terminal apps)
+# and root (SSH sessions), so `claude` works out of the box either way.
+mkdir -p /var/jb/var/mobile/.claude
+mkdir -p /var/jb/var/mobile/bin
+mkdir -p /var/jb/var/root/.claude
+
+# Set permissions
+chown -R mobile:mobile /var/jb/var/mobile/.claude
+chown -R mobile:mobile /var/jb/usr/local/lib/claude-code
+chown -R root:wheel /var/jb/var/root/.claude
+
+# Sign binaries with JIT entitlements
+if [ -f /var/jb/usr/local/lib/claude-code/node ]; then
+    ldid -S/var/jb/usr/local/lib/claude-code/entitlements.xml /var/jb/usr/local/lib/claude-code/node
+fi
+
+# Sign the bundled ripgrep native module (kept as a fallback for
+# USE_BUILTIN_RIPGREP=0; the system `ripgrep` package is used by default)
+if [ -f /var/jb/usr/local/lib/claude-code/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/ripgrep.node ]; then
+    ldid -S /var/jb/usr/local/lib/claude-code/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/ripgrep.node
+    ldid -S /var/jb/usr/local/lib/claude-code/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg
+fi
+
+# Add to PATH for both mobile and root shells if not already present
+for RC in /var/jb/var/mobile/.zshrc /var/jb/var/root/.zshrc; do
+    if ! grep -q "claude-code" "$RC" 2>/dev/null; then
+        echo '' >> "$RC"
+        echo '# Claude Code' >> "$RC"
+        echo 'export PATH="/var/jb/usr/local/bin:$PATH"' >> "$RC"
+    fi
+done
+
+echo ""
+echo "=========================================="
+echo "  Claude Code installed successfully!"
+echo "=========================================="
+echo ""
+echo "This is a CLI-only package - run it from a terminal (SSH, NewTerm, etc):"
+echo ""
+echo "  claude"
+echo ""
+echo "First run will prompt you to log in (or run 'claude setup-token' for a"
+echo "headless SSH-only login). Existing ~/.claude credentials are untouched."
+echo ""
+
+exit 0

@@ -12,13 +12,42 @@ MD5sum: 235408ecacd95fa7c26d47d2b3336dae
 SHA1: df73c80e283381f59ba253b1ba06c5afcbd5db84
 SHA256: 798457c0553e5686fb4d06f030208d8dbbe47247f61daaa457a82947b677e4be
 Section: Development
-Homepage: https://claude.ai
 Description: Claude Code CLI for iOS - AI-powered coding assistant
  Run Claude Code natively on your jailbroken iPhone.
  Includes Node.js 18.20.4 runtime with iOS-optimized V8 flags.
  Supports API key and OAuth authentication.
 Tag: purpose::console, role::developer
-Author: Bryan
+Author: Anthropic (iOS package by Bryan)
+Depiction: https://imcynic.github.io/claude-code-ios/depictions/com.anthropic.claude-code.html
+Name: Claude Code
+SileoDepiction: https://imcynic.github.io/claude-code-ios/depictions/com.anthropic.claude-code.json
+
+Package: com.anthropic.claude-code
+Version: 2.1.19-2
+Architecture: iphoneos-arm64
+Maintainer: Bryan
+Installed-Size: 142284
+Depends: firmware (>= 15.0), zsh, ldid, ripgrep
+Conflicts: com.anthropic.claude-code-beta
+Provides: claude-code
+Filename: debs/claude-code_2.1.19-2_iphoneos-arm64.deb
+Size: 26796588
+MD5sum: 8a65b7cd88280859082b88aa98bd4498
+SHA1: eb17b2f95d5fb831eafe425cd77759fdb9c7f5d2
+SHA256: d11c8dd3018124ee197401c2fb25a2c51f6440612ed60cdd642602855d04a382
+Section: Development
+Description: Claude Code CLI for iOS - AI-powered coding assistant
+ Run Claude Code natively on your jailbroken iPhone. CLI-only package -
+ the experimental home-screen app launcher has been removed since it was
+ just a broken NewTerm URL-scheme shim with no functionality of its own.
+ Includes Node.js 18.20.4 runtime with iOS-optimized V8 flags and uses the
+ system ripgrep package for code search instead of a bundled macOS binary.
+ Login and authentication are handled entirely by the official Claude Code
+ CLI itself (`claude` -> /login, or `claude setup-token` for headless SSH
+ sessions) - this package no longer ships its own OAuth callback server or
+ credential gate.
+Tag: purpose::console, role::developer
+Author: Anthropic (iOS package by Bryan)
 Depiction: https://imcynic.github.io/claude-code-ios/depictions/com.anthropic.claude-code.html
 Name: Claude Code
 SileoDepiction: https://imcynic.github.io/claude-code-ios/depictions/com.anthropic.claude-code.json

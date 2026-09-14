@@ -1,0 +1,19 @@
+#!/var/jb/usr/bin/zsh
+# Claude Code for iOS - deprecated helper
+#
+# Earlier versions of this package shipped a custom OAuth/localhost-callback
+# implementation here. It duplicated (and drifted out of sync with) the
+# login flow that ships inside Claude Code itself, so it has been removed.
+# Authentication is now handled entirely by the official CLI:
+
+echo ""
+echo "claude-auth has been removed - it is no longer needed."
+echo ""
+echo "Claude Code now handles login itself:"
+echo ""
+echo "  claude              then run the /login command inside the app"
+echo "  claude setup-token   headless login for SSH-only sessions (no browser needed)"
+echo ""
+echo "Existing credentials in ~/.claude are unaffected and keep working."
+echo ""
+exit 0

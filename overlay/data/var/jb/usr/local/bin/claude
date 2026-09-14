@@ -1,0 +1,65 @@
+#!/var/jb/usr/bin/zsh
+# Claude Code for iOS - community overlay wrapper
+#
+# This wrapper only sets up the environment needed to run the official
+# Claude Code CLI on a jailbroken iOS device. It does not implement any
+# authentication itself: run `claude` and use its built-in `/login`, or run
+# `claude setup-token` for a headless SSH session. Existing credentials in
+# ~/.claude are read directly by the CLI, same as on any other platform.
+
+CLAUDE_HOME="/var/jb/usr/local/lib/claude-code"
+NODE_BIN="$CLAUDE_HOME/node"
+CLAUDE_CLI="$CLAUDE_HOME/node_modules/@anthropic-ai/claude-code/cli.js"
+SHIM="$CLAUDE_HOME/segmenter-shim.js"
+
+# HOME is not always set correctly by iOS terminal apps/SSH daemons, and the
+# right default differs for root vs. mobile - pick the right one instead of
+# always assuming mobile's home (which broke `claude` when run as root).
+if [ -z "$HOME" ]; then
+    if [ "$(id -u)" = "0" ]; then
+        HOME="/var/jb/var/root"
+    else
+        HOME="/var/jb/var/mobile"
+    fi
+    export HOME
+fi
+
+export NO_COLOR=1
+export UV_THREADPOOL_SIZE=1
+
+# --- iOS terminal compatibility --------------------------------------------
+# Several iOS terminal apps (NewTerm, blink, SSH clients, etc.) don't fully
+# support the cursor-visibility escape sequences Claude Code's ink-based UI
+# sends on startup, which otherwise leaves the very first keypress "stuck"
+# until Esc is pressed. CLAUDE_CODE_ACCESSIBILITY makes the CLI skip them.
+export CLAUDE_CODE_ACCESSIBILITY="${CLAUDE_CODE_ACCESSIBILITY:-1}"
+
+# The ripgrep.node native module bundled with Claude Code is a macOS
+# arm64-darwin build and cannot load on iOS. Use the system `rg` binary
+# (installed via the `ripgrep` package dependency) instead.
+export USE_BUILTIN_RIPGREP="${USE_BUILTIN_RIPGREP:-1}"
+
+# iOS jailbreak userlands ship no locale database at all (no `locale`
+# binary, LANG unset). Claude Code's terminal UI still checks LANG/LC_ALL to
+# decide whether it's safe to draw UTF-8 box-drawing/multi-byte characters,
+# so provide a UTF-8 hint even though no real ICU locale backs it.
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+export LC_CTYPE="${LC_CTYPE:-en_US.UTF-8}"
+
+# Optional legacy convenience file: `export ANTHROPIC_API_KEY=...`
+if [ -f "$HOME/.claude/credentials" ]; then
+    source "$HOME/.claude/credentials"
+fi
+
+# Run Claude Code with iOS-specific V8 flags. Authentication (or its
+# absence) is entirely the official CLI's business from here on.
+exec "$NODE_BIN" \
+    --no-wasm-code-gc \
+    --no-opt \
+    --no-sparkplug \
+    --single-threaded \
+    --liftoff \
+    --no-wasm-tier-up \
+    -r "$SHIM" \
+    "$CLAUDE_CLI" "$@"
