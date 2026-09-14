@@ -8,7 +8,7 @@
       "views": [
         {
           "class": "DepictionMarkdownView",
-          "markdown": "# Claude Code for iOS\n\nRun Claude Code natively on your jailbroken iPhone. CLI-only package. This package includes:\n\n- **Node.js 18.20.4** runtime optimized for iOS\n- **Claude Code 2.1.19** - Anthropic's AI coding assistant\n- **System ripgrep** for code search (no bundled macOS binary)\n\n## Features\n\n- Full Claude Code CLI functionality\n- Login/authentication handled entirely by the official CLI - no bundled OAuth server or credential gate\n- Optimized V8 flags for iOS JIT restrictions\n- Fixed initial-launch terminal hang on iOS terminal apps\n- Run from any terminal (SSH, NewTerm, etc.) - the experimental home-screen app has been removed\n\n## Requirements\n\n- iOS 15.0 or later\n- Jailbroken device (Dopamine, palera1n, etc.)\n- ~140MB free storage\n- zsh, ldid, ripgrep"
+          "markdown": "# Claude Code for iOS\n\nRun Claude Code natively on your jailbroken iPhone. CLI-only package. This package includes:\n\n- **Node.js 18.20.4** runtime optimized for iOS\n- **Claude Code 2.1.112** - Anthropic's AI coding assistant, with plugins/marketplaces/agents (the newest version still distributed as a portable cli.js - see the repo README)\n- **System ripgrep** for code search (no bundled macOS binary)\n\n## Features\n\n- Full Claude Code CLI functionality, including plugins, plugin marketplaces, and custom agents\n- Login/authentication handled entirely by the official CLI - no bundled OAuth server or credential gate\n- Optimized V8 flags for iOS JIT restrictions\n- Fixed initial-launch terminal hang on iOS terminal apps\n- Run from any terminal (SSH, NewTerm, etc.) - the experimental home-screen app has been removed\n\n## Requirements\n\n- iOS 15.0 or later\n- Jailbroken device (Dopamine, palera1n, etc.)\n- ~120MB free storage\n- zsh, ldid, ripgrep, git"
         },
         {
           "class": "DepictionSeparatorView"
@@ -41,7 +41,7 @@
         {
           "class": "DepictionTableTextView",
           "title": "Version",
-          "text": "2.1.19-2"
+          "text": "2.1.112-1"
         },
         {
           "class": "DepictionTableTextView",
@@ -62,11 +62,11 @@
       "views": [
         {
           "class": "DepictionHeaderView",
-          "title": "2.1.19-2"
+          "title": "2.1.112-1"
         },
         {
           "class": "DepictionMarkdownView",
-          "markdown": "- Removed the home-screen app (it was just a broken NewTerm URL-scheme launcher)\n- Removed the bundled OAuth/localhost-callback auth flow and the credential gate - login is now entirely the official CLI's job (`/login`, or `claude setup-token` for headless SSH)\n- Fixed a terminal hang on first launch on several iOS terminal apps (CLAUDE_CODE_ACCESSIBILITY=1)\n- Switched to the system `ripgrep` package instead of the bundled macOS ripgrep binary; added it as a package dependency\n- Rebuilt as a traceable overlay/repack on top of the pinned 2.1.19-1 upstream .deb (see scripts/build-repack.sh in the repo)"
+          "markdown": "- Upgraded the bundled Claude Code CLI from 2.1.19 to 2.1.112 - plugins, plugin marketplaces, custom agents, skills, and more. The newest version still distributed as a portable cli.js; 2.1.113+ switched to a compiled native binary with no iOS target\n- Removed the home-screen app (it was just a broken NewTerm URL-scheme launcher)\n- Removed the bundled OAuth/localhost-callback auth flow and the credential gate - login is now entirely the official CLI's job (`/login`, or `claude setup-token` for headless SSH)\n- Fixed a terminal hang on first launch on several iOS terminal apps (CLAUDE_CODE_ACCESSIBILITY=1)\n- Switched to the system `ripgrep` package instead of the bundled macOS ripgrep binary; added it and `git` as package dependencies\n- Rebuilt as a traceable overlay/repack on top of the pinned 2.1.19-1 upstream .deb (see scripts/build-repack.sh in the repo)"
         },
         {
           "class": "DepictionHeaderView",

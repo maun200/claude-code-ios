@@ -27,6 +27,14 @@ if [ -f /var/jb/usr/local/lib/claude-code/node_modules/@anthropic-ai/claude-code
     ldid -S /var/jb/usr/local/lib/claude-code/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg
 fi
 
+# Sign the bundled voice-input native module, if present. It's built for
+# real macOS and is unlikely to actually load on iOS - the CLI already
+# treats it as optional and disables voice input if it fails to load - but
+# signing it costs nothing and avoids a spurious failure reason.
+if [ -f /var/jb/usr/local/lib/claude-code/node_modules/@anthropic-ai/claude-code/vendor/audio-capture/arm64-darwin/audio-capture.node ]; then
+    ldid -S /var/jb/usr/local/lib/claude-code/node_modules/@anthropic-ai/claude-code/vendor/audio-capture/arm64-darwin/audio-capture.node
+fi
+
 # Add to PATH for both mobile and root shells if not already present
 for RC in /var/jb/var/mobile/.zshrc /var/jb/var/root/.zshrc; do
     if ! grep -q "claude-code" "$RC" 2>/dev/null; then

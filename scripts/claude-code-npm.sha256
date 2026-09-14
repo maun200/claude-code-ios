@@ -1,0 +1,10 @@
+# Pinned upstream @anthropic-ai/claude-code npm package used by
+# build-repack.sh to upgrade the bundled CLI beyond what's baked into the
+# base .deb (see scripts/base-deb.sha256). 2.1.112 is the newest version
+# still distributed as a portable cli.js runnable under a generic Node.js -
+# 2.1.113 and later ship as a compiled native binary per platform
+# (darwin-arm64, linux-x64, ...) with no iOS target, so they cannot run on
+# iOS at all. See README.md "Why Claude Code is pinned to 2.1.112".
+#
+# <sha256>  <npm tarball URL>
+84379969ea53a0e5fd231a8f77debe4c7cb17dd971f4809d10d33f9aeca5de09  https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-2.1.112.tgz

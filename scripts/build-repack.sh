@@ -9,16 +9,25 @@
 #      of a base package that doesn't match exactly).
 #   2. Extracts its control.tar.xz and data.tar.xz.
 #   3. Removes the ClaudeCode.app home-screen launcher entirely.
-#   4. Overlays this repo's small, non-proprietary files on top:
+#   4. Fetches the pinned @anthropic-ai/claude-code npm tarball (checksum in
+#      scripts/claude-code-npm.sha256, cached under .build-cache/ so repeat
+#      builds don't hit the network) and replaces the base package's bundled
+#      CLI (node_modules/@anthropic-ai/claude-code/) with it entirely - this
+#      is how the CLI gets upgraded past whatever shipped in the base .deb,
+#      without ever committing that CLI's source to git. The custom
+#      iOS-patched `node` binary and segmenter-shim.js are untouched.
+#   5. Overlays this repo's small, non-proprietary files on top:
 #        overlay/control/{control,postinst}
 #        overlay/data/...            (currently just the two wrapper scripts)
-#   5. Recomputes Installed-Size and repacks a new .deb with a bumped
+#   6. Recomputes Installed-Size and repacks a new .deb with a bumped
 #      package revision.
 #
 # Usage:
 #   scripts/build-repack.sh [--base PATH_TO_BASE_DEB] [--out OUTPUT_DIR]
+#                            [--npm-tarball PATH_TO_CLAUDE_CODE_TGZ]
 #
-# Defaults: --base debs/claude-code_2.1.19-1_iphoneos-arm64.deb, --out debs/
+# Defaults: --base debs/claude-code_2.1.19-1_iphoneos-arm64.deb, --out debs/,
+#           --npm-tarball fetched fresh into .build-cache/ if not already there
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -26,11 +35,13 @@ cd "$REPO_ROOT"
 
 BASE_DEB="debs/claude-code_2.1.19-1_iphoneos-arm64.deb"
 OUT_DIR="debs"
+NPM_TARBALL=""
 
 while [ $# -gt 0 ]; do
     case "$1" in
         --base) BASE_DEB="$2"; shift 2 ;;
         --out) OUT_DIR="$2"; shift 2 ;;
+        --npm-tarball) NPM_TARBALL="$2"; shift 2 ;;
         *) echo "build-repack.sh: unknown argument: $1" >&2; exit 64 ;;
     esac
 done
@@ -81,7 +92,39 @@ tar -xJf "$WORK/base/data.tar.xz" -C "$WORK/data"
 # --- 3. remove the home-screen app entirely ---------------------------------
 rm -rf "$WORK/data/var/jb/Applications"
 
-# --- 4. apply the overlay ----------------------------------------------------
+# --- 4. fetch the pinned upstream CLI tarball and swap it in ---------------
+NPM_CHECKSUM_FILE="scripts/claude-code-npm.sha256"
+NPM_PINNED_LINE="$(grep -v '^#' "$NPM_CHECKSUM_FILE" | grep -v '^[[:space:]]*$' | head -n1)"
+NPM_PINNED_SUM="$(awk '{print $1}' <<<"$NPM_PINNED_LINE")"
+NPM_PINNED_URL="$(awk '{print $2}' <<<"$NPM_PINNED_LINE")"
+NPM_CACHE_NAME="$(basename "$NPM_PINNED_URL")"
+
+if [ -z "$NPM_TARBALL" ]; then
+    CACHE_DIR="$REPO_ROOT/.build-cache"
+    mkdir -p "$CACHE_DIR"
+    NPM_TARBALL="$CACHE_DIR/$NPM_CACHE_NAME"
+    if [ ! -f "$NPM_TARBALL" ] || [ "$(sha256sum "$NPM_TARBALL" | awk '{print $1}')" != "$NPM_PINNED_SUM" ]; then
+        echo "build-repack.sh: fetching $NPM_PINNED_URL" >&2
+        curl -fsSL -o "$NPM_TARBALL.tmp" "$NPM_PINNED_URL"
+        mv "$NPM_TARBALL.tmp" "$NPM_TARBALL"
+    fi
+fi
+
+NPM_ACTUAL_SUM="$(sha256sum "$NPM_TARBALL" | awk '{print $1}')"
+if [ "$NPM_ACTUAL_SUM" != "$NPM_PINNED_SUM" ]; then
+    echo "build-repack.sh: refusing to build - npm CLI tarball checksum mismatch" >&2
+    echo "  expected: $NPM_PINNED_SUM" >&2
+    echo "  actual:   $NPM_ACTUAL_SUM" >&2
+    echo "  file:     $NPM_TARBALL" >&2
+    exit 65
+fi
+
+CLI_DIR="$WORK/data/var/jb/usr/local/lib/claude-code/node_modules/@anthropic-ai/claude-code"
+rm -rf "$CLI_DIR"
+mkdir -p "$CLI_DIR"
+tar -xzf "$NPM_TARBALL" -C "$CLI_DIR" --strip-components=1
+
+# --- 5. apply the overlay ----------------------------------------------------
 cp -a overlay/data/. "$WORK/data/"
 find overlay/data -type f -print0 | while IFS= read -r -d '' f; do
     rel="${f#overlay/data/}"
@@ -95,7 +138,7 @@ chmod 0644 "$WORK/control/control"
 chmod 0755 "$WORK/control/postinst"
 chown 0:0 "$WORK/control/control" "$WORK/control/postinst"
 
-# --- 5. recompute Installed-Size and repack ----------------------------------
+# --- 6. recompute Installed-Size and repack ----------------------------------
 INSTALLED_SIZE_KB="$(du -sk --apparent-size "$WORK/data" | awk '{print $1}')"
 sed -i "s/^Installed-Size: .*/Installed-Size: $INSTALLED_SIZE_KB/" "$WORK/control/control"
 
